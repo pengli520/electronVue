@@ -1,0 +1,57 @@
+{
+  "name": "vue-electron",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "main": "background.js",
+  "dependencies": {
+    "aws-sdk": "^2.779.0",
+    "body-parser": "^1.19.0",
+    "chromedriver": "^86.0.0",
+    "core-js": "^3.6.5",
+    "dns": "^0.2.2",
+    "element-ui": "^2.13.2",
+    "express": "^4.17.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "got": "^11.8.0",
+    "http2": "^3.3.7",
+    "https": "^1.0.0",
+    "node-sass": "^4.11.0",
+    "os": "^0.1.1",
+    "qs": "^6.9.4",
+    "request": "^2.88.2",
+    "sass-loader": "^7.1.0",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.2",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "electron": "^9.0.0",
+    "electron-devtools-installer": "^3.1.1",
+    "electron-rebuild": "^2.3.2",
+    "typescript": "~3.9.3",
+    "vue-cli-plugin-electron-builder": "^2.0.0-rc.4",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "__npminstall_done": false
+}
