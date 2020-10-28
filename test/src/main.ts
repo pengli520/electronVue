@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-10-27 10:42:06
- * @LastEditors: your name
+ * @LastEditTime: 2020-10-28 15:29:25
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\main.ts
  */

@@ -1,34 +1,66 @@
+/*
+ * @Author: your name
+ * @Date: 2020-10-28 11:12:59
+ * @LastEditTime: 2020-10-28 16:35:00
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \test\src\background.ts
+ */
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import douYiVideo from './nodeModule/douYiVideo';
+import { getProcessPath } from './nodeModule';
+import ffmpegCmd from '@/nodeModule/ffmpegCmd.ts';
+import fluentFfmpeg from '@/nodeModule/fluentFfmpeg.ts';
+import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win: BrowserWindow | null
+let win: BrowserWindow | null | any
+
+ipcMain.on('changWindowSize', e => {
+  const douYin = new douYiVideo({userUrl: 'https://v.douyin.com/JPU6cfJ/'})
+  win.setSize(1050, 700)
+})
+
+ipcMain.on('getProcessPath', e => {
+  new fluentFfmpeg({})
+})
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
-// 设置菜单
-let dockMenu = Menu.buildFromTemplate([
+
+function createMenu () {
+  //设置菜单
+  let dockMenu = Menu.buildFromTemplate([
     {
-        label: '文件', click: function () {
-            console.log('点击事件');
-        }
+      label: '文件',
+      click: function () {
+          console.log('点击事件');
+      }
     },
     {
-        label: '编辑', submenu: [
-            {label: '保存'},
-            {label: '另存'}
-        ]
+      label: '编辑',
+      submenu: [
+          {label: '保存'},
+          {label: '另存'}
+      ]
     },
     {label: '帮助'}
-]);
-Menu.setApplicationMenu(dockMenu);
+  ]);
+  // darwin表示macOS，针对macOS的设置
+  if (process.platform === 'darwin') {
+    Menu.setApplicationMenu(dockMenu);
+  } else {
+    // windows及linux系统
+    Menu.setApplicationMenu(dockMenu)
+  }
+}
+
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -37,11 +69,13 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: (process.env
-          .ELECTRON_NODE_INTEGRATION as unknown) as boolean
+      // nodeIntegration: (process.env
+      //     .ELECTRON_NODE_INTEGRATION as unknown) as boolean
+      nodeIntegration: true
     }
   })
-
+  createMenu()
+  console.log('是否完整支持node', process.env.ELECTRON_NODE_INTEGRATION)
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
@@ -56,6 +90,7 @@ function createWindow() {
     win = null
   })
 }
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -78,14 +113,17 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     await installExtension(VUEJS_DEVTOOLS)
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
+  globalShortcut.register('CommandOrControl+Shift+i', function () {
+    win.webContents.openDevTools()
+  })
   createWindow()
 })
 

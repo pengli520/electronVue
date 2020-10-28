@@ -1,10 +1,10 @@
 /*
  * @Author: your name
- * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-10-27 11:07:14
+ * @Date: 2020-10-28 10:53:17
+ * @LastEditTime: 2020-10-28 13:30:09
  * @LastEditors: your name
  * @Description: In User Settings Edit
- * @FilePath: \vue-electron\src\shims-vue.d.ts
+ * @FilePath: \test\src\shims-vue.d.ts
  */
 declare module '*.vue' {
   import Vue from 'vue';

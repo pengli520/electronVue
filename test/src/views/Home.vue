@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-10-27 15:37:21
+ * @LastEditTime: 2020-10-28 16:23:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -18,14 +18,15 @@
       :list="[]"
       @search="search"
     />
+    <el-button @click="getPath"> 55</el-button>
   </div>
 </template>
 
 <script lang="ts">
 import optionInput from '@/components/optionInput.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import downVideo from '@/node/index.js'
-console.log(downVideo)
+const { ipcRenderer } = window.require('electron')
+
 @Component({
   name: 'Home',
   components: {
@@ -37,11 +38,15 @@ export default class OptionInput extends Vue {
   // 搜索
   search(val: String) {
     console.log(val)
-    // new DouYiVideo({userUrl: 'https://v.douyin.com/JPAGUg3/'})
+    ipcRenderer.send('changWindowSize')
   }
 
   handleClick(val: any) {
       console.log(val)
+  }
+
+  getPath() {
+    const a = ipcRenderer.send('getProcessPath')
   }
 }
 </script>
