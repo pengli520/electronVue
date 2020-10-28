@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-10-28 16:35:00
+ * @LastEditTime: 2020-10-28 17:59:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -25,9 +25,11 @@ ipcMain.on('changWindowSize', e => {
   win.setSize(1050, 700)
 })
 
-ipcMain.on('getProcessPath', e => {
-  new fluentFfmpeg({})
+ipcMain.on('getProcessPath', (event, arg) => {
+  console.log(event, arg)
+  event.reply('getProcessPath', getProcessPath())
 })
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([

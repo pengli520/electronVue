@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-10-28 16:23:37
+ * @LastEditTime: 2020-10-28 17:54:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -26,7 +26,9 @@
 import optionInput from '@/components/optionInput.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator';
 const { ipcRenderer } = window.require('electron')
-
+ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
+  console.log(arg)
+})
 @Component({
   name: 'Home',
   components: {
@@ -46,7 +48,7 @@ export default class OptionInput extends Vue {
   }
 
   getPath() {
-    const a = ipcRenderer.send('getProcessPath')
+    ipcRenderer.send('getProcessPath')
   }
 }
 </script>
