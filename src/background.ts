@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-10-28 17:59:10
+ * @LastEditTime: 2020-11-02 16:44:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -20,9 +20,11 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null | any
 
-ipcMain.on('changWindowSize', e => {
-  const douYin = new douYiVideo({userUrl: 'https://v.douyin.com/JPU6cfJ/'})
-  win.setSize(1050, 700)
+ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
+  const douYin = new douYiVideo({userUrl});
+  const list = await douYin.shareCodeParsing();
+  event.reply('BackGetDouYiPlayUrl', list);
+  console.log('****--*-', list);
 })
 
 ipcMain.on('getProcessPath', (event, arg) => {

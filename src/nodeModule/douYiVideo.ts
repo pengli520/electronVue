@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-10-28 15:58:31
+ * @LastEditTime: 2020-11-02 17:01:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -35,9 +35,8 @@ export default class downVideo  {
     baseUrl: string = 'https://www.amemv.com/web/api/v2/aweme/post/?';
     option: Option;
     constructor(option: Option) {
-        console.log(option)
+        // console.log(option)
         this.option = option;
-        this.shareCodeParsing()
     }
     init () {
         app.listen(8001, () => {
@@ -46,7 +45,7 @@ export default class downVideo  {
     }
     // 用户分享码解析
     shareCodeParsing() {
-        got(this.option.userUrl, {
+        return got(this.option.userUrl, {
             timeout: 10000
         }).then((response: any) => {
             let arr = response.url.split('?');
@@ -59,7 +58,7 @@ export default class downVideo  {
             // 抖音用户数据列表
             const path = this.baseUrl + qs.stringify(param)
             console.log(path)
-            this.userInfo(path)
+            return this.userInfo(path)
         }).catch((error: any) => {
             console.log('用户分享码解析' + error)
         })
@@ -67,12 +66,18 @@ export default class downVideo  {
 
     // 用户视频列表
     userInfo(path: string) {
-        got(path).then((resList: any) => {
+        return got(path).then((resList: any) => {
             const res = JSON.parse(resList.body);
+            // 视频地址
+            const videoArr = [];
             for (let item of res.aweme_list) {
-                console.log(this.videoUrl + item.video.vid)
-                this.videoParsing(this.videoUrl + item.video.vid);
+                videoArr.push({
+                    videoUrl: this.videoUrl.replace('playwm', 'play') + item.video.vid,
+                    desc: item.desc,
+                    cover: item.video.cover.url_list[0],
+                });
             }
+            return videoArr;
         }).catch((error: any) => {
             console.log('用户视频列表' + error)
         })
