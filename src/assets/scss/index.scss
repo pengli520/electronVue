@@ -13,3 +13,32 @@
 @mixin tl(){text-align: left;}
 @mixin linesH($row: 2){overflow:hidden;text-overflow:ellipsis;display:-webkit-box; -webkit-box-orient:vertical;-webkit-line-clamp:$row; }
 @mixin slh{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+$bg-menu-selected: #E2E3EE; // 左侧菜单按钮选中背景色 区分区域背景色
+/* 滚动条 */
+@mixin scrollBar($width: 10px, $radius: 5px, $shadow: null, $height: 20px) {
+    &::-webkit-scrollbar {
+      width: $width;
+      height: $height;
+    }
+  
+    &::-webkit-scrollbar-track {
+      @if ($shadow != null) {
+        -webkit-box-shadow: $shadow;
+      }
+      @if ($radius != null) {
+        border-radius: $radius;
+      }
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      @if ($shadow != null) {
+        -webkit-box-shadow: $shadow;
+      }
+      @if ($radius != null) {
+        border-radius: $radius;
+      }
+      background: $bg-menu-selected;
+    }
+}
+$background: #42b983;

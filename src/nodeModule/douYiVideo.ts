@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-02 17:01:31
+ * @LastEditTime: 2020-11-03 16:01:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 export default class downVideo  {
     // 条数
-    count: number = 2
+    count: number = 20
     max_cursor: number = 0
     aid: number = 1128
     // 视频地址
@@ -35,7 +35,6 @@ export default class downVideo  {
     baseUrl: string = 'https://www.amemv.com/web/api/v2/aweme/post/?';
     option: Option;
     constructor(option: Option) {
-        // console.log(option)
         this.option = option;
     }
     init () {
@@ -48,6 +47,7 @@ export default class downVideo  {
         return got(this.option.userUrl, {
             timeout: 10000
         }).then((response: any) => {
+            console.log(response.url);
             let arr = response.url.split('?');
             // 获取用户 sec_uid
             let param = qs.parse(arr[1]);
@@ -75,6 +75,7 @@ export default class downVideo  {
                     videoUrl: this.videoUrl.replace('playwm', 'play') + item.video.vid,
                     desc: item.desc,
                     cover: item.video.cover.url_list[0],
+                    select: false,
                 });
             }
             return videoArr;

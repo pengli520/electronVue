@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-02 16:44:35
+ * @LastEditTime: 2020-11-03 15:46:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -12,7 +12,7 @@ import douYiVideo from './nodeModule/douYiVideo';
 import { getProcessPath } from './nodeModule';
 import ffmpegCmd from '@/nodeModule/ffmpegCmd.ts';
 import fluentFfmpeg from '@/nodeModule/fluentFfmpeg.ts';
-import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -24,8 +24,16 @@ ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
   const douYin = new douYiVideo({userUrl});
   const list = await douYin.shareCodeParsing();
   event.reply('BackGetDouYiPlayUrl', list);
-  console.log('****--*-', list);
+  console.log(douYin);
 })
+ipcMain.on('ShowSaveDirectory', async (event, arg) => {
+  const obj: any = dialog.showOpenDialogSync({ properties: ['openFile', 'openDirectory', 'showHiddenFiles'] })
+  console.log(obj[0], '-------')
+  if (obj[0]) {
+    event.reply('BackShowSaveDirectory',obj[0]);
+  }
+})
+
 
 ipcMain.on('getProcessPath', (event, arg) => {
   console.log(event, arg)
@@ -68,8 +76,8 @@ function createMenu () {
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
