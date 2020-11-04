@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-03 17:42:27
+ * @LastEditTime: 2020-11-04 15:52:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -57,7 +57,7 @@ export default class OptionInput extends Vue {
   }
 
   handleClick(val: any) {
-      console.log(val)
+      // console.log(val)
   }
 
 }

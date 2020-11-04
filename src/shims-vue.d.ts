@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 10:53:17
- * @LastEditTime: 2020-10-28 13:30:09
- * @LastEditors: your name
+ * @LastEditTime: 2020-11-04 15:09:06
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\shims-vue.d.ts
  */
@@ -11,3 +11,4 @@ declare module '*.vue' {
   export default Vue;
 }
 declare module 'electron-devtools-installer';
+declare module 'sortablejs';

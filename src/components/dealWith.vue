@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-03 18:01:55
+ * @LastEditTime: 2020-11-04 17:28:18
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -9,24 +9,81 @@
 <template>
     <div class="deal-with">
         <div class="main" id="main">
-            <p>视频拖在这里</p>
+            <div class="import-video">视频拖在这里</div>
+            <div class="synthetic-video">
+                <video class="video" preload controls>
+                    <source :src="mergevideo" type='video/mp4'>
+                </video>
+            </div>
         </div>
+        <pl-sort-mode :list="videoUrl"/>
+        <!-- :disabled="false || !videoUrl.length" -->
+        <el-button type="success" class="btn" @click="videoMerge" >合并视频</el-button>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-@Component
+import { Message } from 'element-ui';
+import sortMode from '@/components/sortMode.vue';
+const { ipcRenderer } = window.require('electron')
+const fs = window.require('fs')
+interface VideoUrl {
+    path: string; // 临时文件路径
+    absolutePath: string; // 绝对地址
+}
+@Component({
+    components: {
+        'pl-sort-mode': sortMode,
+    }
+})
 export default class DealWith extends Vue {
+    // 视频格式
+    videoFormat = ['MP4','3GP','AVI','MKV','WMV','MPG','VOB','FLV','SWF','MOV'];
+    // 选择的视频路径
+    videoUrl: VideoUrl[] = [];
+    // 合并好的视频
+    mergevideo: string = '';
+    // 合成文件名
+    fileName: string = `${window.localStorage.getItem('videoSaveDirectory')}/1.txt`;
     mounted() {
         const dragWrapper: any = document.getElementById("main");
         dragWrapper.addEventListener("drop",(e: any)=>{
             e.preventDefault(); //阻止e的默认行为
-            const files = e.dataTransfer.files;
+            const files: any = e.dataTransfer.files;
             if (files && files.length>=1){
-                const path = files[0].path;
-                console.log("file:",path, files);
+                for (const item of files) {
+                    const arr = item.path.split('.');
+                    const suffix = arr[arr.length - 1].toUpperCase();
+                    if (this.videoFormat.includes(suffix)) {
+                        this.videoUrl.push({
+                            path: window.URL.createObjectURL(item),
+                            absolutePath: item.path,
+                        })
+                        let path = `file ${item.path} \n`;
+                        fs.readFile(this.fileName, 'utf8', (error: string, data: any) => { 
+                            if (error) {
+                                fs.writeFileSync(this.fileName, path, (error: any) => { 
+                                    if(error) { 
+                                        console.log('错诶'+error)
+                                    }
+                                })
+                            } else {
+                                fs.appendFile(this.fileName, path, (error: any) => { 
+                                    if(error) { 
+                                        console.log(error)
+                                    }
+                                })
+                            }
+                        })
+
+                    } else {
+                        Message({
+                            type: 'error',
+                            message: '请上传视频文件'
+                        });
+                    }
+                }
                 // const content = fs.readFileSync(path);
             }
         })    
@@ -34,13 +91,30 @@ export default class DealWith extends Vue {
             e.preventDefault();
         })    
     }
+
+    // 合成视频
+    videoMerge() {
+        ipcRenderer.send('CmdMergeVideo', window.localStorage.getItem('videoSaveDirectory'));
+    }
 }
 </script>
 
 <style lang="scss">
 .deal-with{
+    width: 96%;
+    @include ma;
     .main {
-        @include wh(200px, 200px, #eee);
+        @include flexsb();
+        div {
+            @include wh(200px, 200px, #eee);
+        }
+        .import-video{
+            width: 200px;
+        }
+    }
+    .btn{
+        @include ma;
+        margin-top: 20px;
     }
 }
 </style>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-03 15:46:07
+ * @LastEditTime: 2020-11-04 17:24:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -20,12 +20,14 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null | any
 
+// 获取用户视频列表
 ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
   const douYin = new douYiVideo({userUrl});
   const list = await douYin.shareCodeParsing();
   event.reply('BackGetDouYiPlayUrl', list);
   console.log(douYin);
 })
+// 获取保存视频文件夹
 ipcMain.on('ShowSaveDirectory', async (event, arg) => {
   const obj: any = dialog.showOpenDialogSync({ properties: ['openFile', 'openDirectory', 'showHiddenFiles'] })
   console.log(obj[0], '-------')
@@ -33,8 +35,10 @@ ipcMain.on('ShowSaveDirectory', async (event, arg) => {
     event.reply('BackShowSaveDirectory',obj[0]);
   }
 })
-
-
+// 合成视频
+ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
+  console.log(new ffmpegCmd({absolutePath,}));
+})
 ipcMain.on('getProcessPath', (event, arg) => {
   console.log(event, arg)
   event.reply('getProcessPath', getProcessPath())
