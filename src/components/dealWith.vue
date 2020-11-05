@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-05 15:42:01
+ * @LastEditTime: 2020-11-05 18:02:19
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -10,9 +10,9 @@
     <div class="deal-with">
         <div class="main" id="main">
             <div class="import-video">视频拖在这里</div>
-            <div class="synthetic-video">
+            <div class="synthetic-video" v-for="(path, index) in [mergedVideopath]" :key="index">
                 <video class="video" preload controls>
-                    <source :src="mergevideo" type='video/mp4'>
+                    <source :src="path" type='video/mp4'>
                 </video>
             </div>
         </div>
@@ -27,8 +27,22 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Message } from 'element-ui';
 import sortMode from '@/components/sortMode.vue';
 import { State, namespace, Mutation } from 'vuex-class';
-const { ipcRenderer } = window.require('electron')
+const { ipcRenderer } = window.require('electron');
+import $store from '@/store/index.ts'
+
 const fs = window.require('fs')
+// 合成视频地址
+ipcRenderer.on('BackCmdMergeVideo', (event: any, arg: Blob) => {
+    let file = new File([arg],'1.mp4',{type:'video/mp4'})
+    let path = window.URL.createObjectURL(file);
+    console.log(path)
+    $store.commit('setMergedVideopath', path)
+    let times = setTimeout(() => {
+        window.URL.revokeObjectURL(path);
+        clearTimeout(times)
+    }, 1000)
+})
+
 interface VideoUrl {
     path: string; // 临时文件路径
     absolutePath: string; // 绝对地址
@@ -40,14 +54,12 @@ interface VideoUrl {
 })
 export default class DealWith extends Vue {
     @State((s) => s.saveDirectoryVideo) private saveDirectoryVideo!: string;
+    // 合并好的视频
+    @State((s) => s.mergedVideopath) private mergedVideopath!: string;
     // 视频格式
     videoFormat = ['MP4','3GP','AVI','MKV','WMV','MPG','VOB','FLV','SWF','MOV'];
     // 选择的视频路径
     videoUrl: VideoUrl[] = [];
-    // 合并好的视频
-    mergevideo: string = '';
-    // 合成文件名
-    fileName: string = `${this.saveDirectoryVideo}/1.txt`;
     mounted() {
         const dragWrapper: any = document.getElementById("main");
         dragWrapper.addEventListener("drop",(e: any)=>{
@@ -58,9 +70,10 @@ export default class DealWith extends Vue {
                     const arr = item.path.split('.');
                     const suffix = arr[arr.length - 1].toUpperCase();
                     if (this.videoFormat.includes(suffix)) {
+                        console.log(item.path, item.path.replace(/\\/g, '\\\\'));
                         this.videoUrl.push({
                             path: window.URL.createObjectURL(item),
-                            absolutePath: item.path,
+                            absolutePath: item.path.replace(/\\/g, '\\\\'),
                         })
                     } else {
                         Message({
@@ -78,30 +91,37 @@ export default class DealWith extends Vue {
 
     // 合成视频
     videoMerge() {
+        $store.commit('setMergedVideopath', '');
         this.produceTxt();
-        ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
+        setTimeout(() => {
+            ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
+        }, 3000)
     }
 
     // 生成txt
     produceTxt() {
+        // 合成文件名
+        const fileName: string = `${this.saveDirectoryVideo}/1.txt`;
+        let txt = '';
         for (const item of this.videoUrl) {
-            let path = `file ${item.path} \n`;
-            fs.readFile(this.fileName, 'utf8', (error: string, data: any) => { 
-                if (error) {
-                    fs.writeFileSync(this.fileName, path, (error: any) => { 
-                        if(error) { 
-                            console.log('错诶'+error)
-                        }
-                    })
-                } else {
-                    fs.appendFile(this.fileName, path, (error: any) => { 
-                        if(error) { 
-                            console.log(error)
-                        }
-                    })
-                }
-            })
+            txt += `file ${item.absolutePath} \n`;
         }
+        fs.writeFileSync(fileName, txt, (error: any) => { 
+            if(error) { 
+                console.log('错诶'+error)
+            }
+        })
+        // fs.readFile(fileName, 'utf8', (error: string, data: any) => { 
+        //     if (error) {
+
+        //     } else {
+        //         fs.appendFile(fileName, txt, (error: any) => { 
+        //             if(error) { 
+        //                 console.log(error)
+        //             }
+        //         })
+        //     }
+        // })
     }
 }
 </script>

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-11-03 15:03:34
- * @LastEditTime: 2020-11-03 15:05:28
- * @LastEditors: your name
+ * @LastEditTime: 2020-11-05 17:36:44
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\src\nodeModule\file.ts
  */
@@ -54,4 +54,16 @@ function a(pathUrl: string) {
             }
         });
     })
+}
+
+const readFile = (filePath: string) => {
+    fs.readFile(filePath, (err: string, data: any)=>{
+        if(err) throw err;
+        console.log(data, filePath, '**//')
+        return data;
+    })
+}
+
+export default {
+    readFile,
 }

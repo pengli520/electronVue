@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-05 10:42:45
+ * @LastEditTime: 2020-11-05 17:40:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -15,7 +15,8 @@ import fluentFfmpeg from '@/nodeModule/fluentFfmpeg.ts';
 import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain, dialog, remote } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-
+import file from '@/nodeModule/file.ts'
+const fs = require('fs');
 // 渲染进程和主进程兼容
 const APP = process.type === 'renderer' ? remote.app : app; 
 
@@ -50,8 +51,20 @@ ipcMain.on('ShowSaveDirectory', async (event, arg) => {
 })
 // 合成视频
 ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
-  console.log(new ffmpegCmd({absolutePath,}));
+  const fileName = +new Date();
+  const ffmpeg = new ffmpegCmd({absolutePath, fileName });
+  ffmpeg.init().then((res: any) => {
+    const binary = fs.readFileSync(res);
+    console.log(binary, '流')
+    event.reply('BackCmdMergeVideo', binary);
+  })
+  .catch(err => {
+    event.reply('BackCmdMergeVideo', false);
+    console.log(err);
+  })
 })
+
+
 ipcMain.on('getProcessPath', (event, arg) => {
   console.log(event, arg)
   event.reply('getProcessPath', getProcessPath())

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-05 15:22:59
+ * @LastEditTime: 2020-11-05 16:04:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -38,8 +38,8 @@ ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
 // 视频下载目录
 ipcRenderer.on('BackShowSaveDirectory', (event: any, arg: any) => {
   db.insert({videoSaveDirectory: arg}).then((res: any) => {
-    store.commit('setSaveDirectoryVideo',res);
-    console.log(res);
+    store.commit('setSaveDirectoryVideo', arg);
+    console.log(res, '返回');
   });
   
 })

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-05 15:18:46
+ * @LastEditTime: 2020-11-05 16:34:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\main.ts
@@ -21,8 +21,9 @@ Vue.config.productionTip = false;
 (db as any).find({})
 .then((list: any) => {
   const data = list.find((item: any) => item.videoSaveDirectory);
+  console.log(data)
   if (data) {
-    store.commit('setSaveDirectoryVideo', data[0]);
+    store.commit('setSaveDirectoryVideo', data.videoSaveDirectory);
   }
 })
 
