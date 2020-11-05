@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-04 15:52:11
+ * @LastEditTime: 2020-11-05 15:22:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -26,6 +26,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import videoList from '@/components/videoList.vue';
 import { Loading } from 'element-ui';
 import dealWith from '@/components/dealWith.vue';
+import db from '@/nodeModule/db.ts';
+import store from '@/store/index.ts';
 // Loading.service({ fullscreen: true });
 const { ipcRenderer } = window.require('electron')
 ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
@@ -35,7 +37,11 @@ ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
 
 // 视频下载目录
 ipcRenderer.on('BackShowSaveDirectory', (event: any, arg: any) => {
-  window.localStorage.setItem('videoSaveDirectory', arg);
+  db.insert({videoSaveDirectory: arg}).then((res: any) => {
+    store.commit('setSaveDirectoryVideo',res);
+    console.log(res);
+  });
+  
 })
 
 

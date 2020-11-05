@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-03 13:33:32
+ * @LastEditTime: 2020-11-05 15:18:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\main.ts
@@ -12,9 +12,20 @@ import router from './router';
 import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import db from '@/nodeModule/db.ts'
 
+Vue.prototype.$db = db.nedb
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
+
+(db as any).find({})
+.then((list: any) => {
+  const data = list.find((item: any) => item.videoSaveDirectory);
+  if (data) {
+    store.commit('setSaveDirectoryVideo', data[0]);
+  }
+})
+
 Vue.directive('InfiniteScroll', {
   update(el: any, binding) {
       el.onscroll = function() {

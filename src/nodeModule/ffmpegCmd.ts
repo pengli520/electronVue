@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:55:54
- * @LastEditTime: 2020-11-04 17:44:23
+ * @LastEditTime: 2020-11-05 15:47:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\ffmpegCmd.ts
@@ -17,7 +17,8 @@ export default class ffmpegCmd {
         this.init()
     }
     init() {
-        const cmd = `ffmpeg -y -f concat -safe 0 -i 1.txt -c copy output.mp4`
+        const times = +new Date();
+        const cmd = `ffmpeg -y -f concat -safe 0 -i 1.txt -c copy ${times}.mp4`
         process.chdir(this.option.absolutePath)
         console.log(process.cwd(), this.option.absolutePath)
         child.exec(cmd, (err: any, stdout: any, stderr: any) => {
@@ -25,7 +26,7 @@ export default class ffmpegCmd {
                 console.error('错误', JSON.stringify(err));
                 return;
             }
-            console.log(JSON.stringify(stdout));
+            console.log(stdout);
         });
     }
 }

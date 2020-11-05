@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-04 17:28:18
+ * @LastEditTime: 2020-11-05 15:42:01
  * @LastEditors: Please set LastEditors
- * @Description: 视频合并
+ * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
 -->
 <template>
@@ -26,6 +26,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Message } from 'element-ui';
 import sortMode from '@/components/sortMode.vue';
+import { State, namespace, Mutation } from 'vuex-class';
 const { ipcRenderer } = window.require('electron')
 const fs = window.require('fs')
 interface VideoUrl {
@@ -38,6 +39,7 @@ interface VideoUrl {
     }
 })
 export default class DealWith extends Vue {
+    @State((s) => s.saveDirectoryVideo) private saveDirectoryVideo!: string;
     // 视频格式
     videoFormat = ['MP4','3GP','AVI','MKV','WMV','MPG','VOB','FLV','SWF','MOV'];
     // 选择的视频路径
@@ -45,7 +47,7 @@ export default class DealWith extends Vue {
     // 合并好的视频
     mergevideo: string = '';
     // 合成文件名
-    fileName: string = `${window.localStorage.getItem('videoSaveDirectory')}/1.txt`;
+    fileName: string = `${this.saveDirectoryVideo}/1.txt`;
     mounted() {
         const dragWrapper: any = document.getElementById("main");
         dragWrapper.addEventListener("drop",(e: any)=>{
@@ -60,23 +62,6 @@ export default class DealWith extends Vue {
                             path: window.URL.createObjectURL(item),
                             absolutePath: item.path,
                         })
-                        let path = `file ${item.path} \n`;
-                        fs.readFile(this.fileName, 'utf8', (error: string, data: any) => { 
-                            if (error) {
-                                fs.writeFileSync(this.fileName, path, (error: any) => { 
-                                    if(error) { 
-                                        console.log('错诶'+error)
-                                    }
-                                })
-                            } else {
-                                fs.appendFile(this.fileName, path, (error: any) => { 
-                                    if(error) { 
-                                        console.log(error)
-                                    }
-                                })
-                            }
-                        })
-
                     } else {
                         Message({
                             type: 'error',
@@ -84,7 +69,6 @@ export default class DealWith extends Vue {
                         });
                     }
                 }
-                // const content = fs.readFileSync(path);
             }
         })    
         dragWrapper.addEventListener("dragover",(e: any)=>{
@@ -94,7 +78,30 @@ export default class DealWith extends Vue {
 
     // 合成视频
     videoMerge() {
-        ipcRenderer.send('CmdMergeVideo', window.localStorage.getItem('videoSaveDirectory'));
+        this.produceTxt();
+        ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
+    }
+
+    // 生成txt
+    produceTxt() {
+        for (const item of this.videoUrl) {
+            let path = `file ${item.path} \n`;
+            fs.readFile(this.fileName, 'utf8', (error: string, data: any) => { 
+                if (error) {
+                    fs.writeFileSync(this.fileName, path, (error: any) => { 
+                        if(error) { 
+                            console.log('错诶'+error)
+                        }
+                    })
+                } else {
+                    fs.appendFile(this.fileName, path, (error: any) => { 
+                        if(error) { 
+                            console.log(error)
+                        }
+                    })
+                }
+            })
+        }
     }
 }
 </script>
@@ -110,6 +117,17 @@ export default class DealWith extends Vue {
         }
         .import-video{
             width: 200px;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+        .synthetic-video{
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            .video{
+                width: 100%;
+            }
         }
     }
     .btn{

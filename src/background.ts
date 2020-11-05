@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-04 17:24:57
+ * @LastEditTime: 2020-11-05 10:42:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -12,9 +12,22 @@ import douYiVideo from './nodeModule/douYiVideo';
 import { getProcessPath } from './nodeModule';
 import ffmpegCmd from '@/nodeModule/ffmpegCmd.ts';
 import fluentFfmpeg from '@/nodeModule/fluentFfmpeg.ts';
-import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain, dialog } from 'electron'
+import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain, dialog, remote } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+
+// 渲染进程和主进程兼容
+const APP = process.type === 'renderer' ? remote.app : app; 
+
+// 本地路径一项目目录
+// const STORE_PATH = APP.getAppPath('userData') // 获取electron应用的用户目录
+// if (process.type !== 'renderer') {
+  // if (!fs.pathExistsSync(STORE_PATH)) {
+    // fs.mkdirpSync(STORE_PATH);
+  // }
+// }
+
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

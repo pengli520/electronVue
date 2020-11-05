@@ -17,6 +17,7 @@
     "element-ui": "^2.13.2",
     "ffmpeg-static-electron": "^2.0.1",
     "fluent-ffmpeg": "^2.1.2",
+    "nedb": "^1.8.0",
     "node-sass": "^4.11.0",
     "sass": "^1.28.0",
     "sass-loader": "^7.1.0",

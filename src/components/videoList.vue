@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-03 17:35:44
+ * @LastEditTime: 2020-11-05 15:32:49
  * @LastEditors: Please set LastEditors
- * @Description: 视频列表
+ * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
 -->
 <template>
@@ -11,7 +11,7 @@
     <div class="msg">
       <el-radio v-model="allSelect" label="1">全选</el-radio>
       <p>【已加载：{{ videoList.length }} 选择：0】</p>
-      <p class="btn">批量下载所选</p>
+      <p class="btn" @click="downvideo()">批量下载所选</p>
     </div>
 
     <div class="main" v-InfiniteScroll="{methods: getVideoList, status: true, allTotal, dataListLen: videoList.length}">
@@ -22,7 +22,7 @@
         <el-tooltip class="item" effect="dark" :content="item.desc" placement="top-start">
           <p class="title">{{ item.desc }}</p>
         </el-tooltip>
-        <el-button @click="downvideo(item.videoUrl)" class="btn" size="mini">下载视频</el-button>
+        <el-button class="btn" size="mini">下载视频</el-button>
         <el-checkbox v-model="item.select"></el-checkbox>
       </div>
     </div>
@@ -47,10 +47,12 @@ interface VideoListFace {
 @Component
 export default class VideoList extends Vue {
   @State((s) => s.videoList) private videoList!: VideoListFace;
+  @State((s) => s.saveDirectoryVideo) private saveDirectoryVideo!: string;
   // 是否全选当前记载出来的视频
   allSelect: boolean = false;
   // 总条数
   allTotal: number = 100;
+  $db: any;
 
   // 获取视频列表
   private getVideoList() {
@@ -58,7 +60,7 @@ export default class VideoList extends Vue {
   }
   // 下载视频
   downvideo() {
-    if (!window.localStorage.getItem('videoSaveDirectory')) {
+    if (!this.saveDirectoryVideo) {
       ipcRenderer.send('ShowSaveDirectory');
     }
   }
