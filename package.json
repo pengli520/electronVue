@@ -13,7 +13,9 @@
   },
   "main": "background.js",
   "dependencies": {
+    "asar": "^3.0.3",
     "core-js": "^3.6.5",
+    "electron-packager": "^15.1.0",
     "element-ui": "^2.13.2",
     "ffmpeg-static-electron": "^2.0.1",
     "fluent-ffmpeg": "^2.1.2",

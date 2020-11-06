@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-05 17:40:42
+ * @LastEditTime: 2020-11-06 16:34:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -54,9 +54,7 @@ ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
   const fileName = +new Date();
   const ffmpeg = new ffmpegCmd({absolutePath, fileName });
   ffmpeg.init().then((res: any) => {
-    const binary = fs.readFileSync(res);
-    console.log(binary, '流')
-    event.reply('BackCmdMergeVideo', binary);
+    event.reply('BackCmdMergeVideo', res);
   })
   .catch(err => {
     event.reply('BackCmdMergeVideo', false);

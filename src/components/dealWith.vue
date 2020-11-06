@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-05 18:02:19
+ * @LastEditTime: 2020-11-06 16:59:37
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -10,9 +10,9 @@
     <div class="deal-with">
         <div class="main" id="main">
             <div class="import-video">视频拖在这里</div>
-            <div class="synthetic-video" v-for="(path, index) in [mergedVideopath]" :key="index">
-                <video class="video" preload controls>
-                    <source :src="path" type='video/mp4'>
+            <div class="synthetic-video">
+                <video class="video" v-if="mergedVideopath" preload controls>
+                    <source :src="mergedVideopath" type='video/mp4'>
                 </video>
             </div>
         </div>
@@ -33,14 +33,15 @@ import $store from '@/store/index.ts'
 const fs = window.require('fs')
 // 合成视频地址
 ipcRenderer.on('BackCmdMergeVideo', (event: any, arg: Blob) => {
-    let file = new File([arg],'1.mp4',{type:'video/mp4'})
+    const binary = fs.readFileSync(arg);
+    let file = new File([binary],'1.mp4',{type:'video/mp4'})
     let path = window.URL.createObjectURL(file);
-    console.log(path)
+    console.log(path, arg)
     $store.commit('setMergedVideopath', path)
-    let times = setTimeout(() => {
-        window.URL.revokeObjectURL(path);
-        clearTimeout(times)
-    }, 1000)
+    // let times = setTimeout(() => {
+    //     window.URL.revokeObjectURL(path);
+    //     clearTimeout(times)
+    // }, 1000)
 })
 
 interface VideoUrl {
@@ -143,10 +144,12 @@ export default class DealWith extends Vue {
         }
         .synthetic-video{
             width: 200px;
-            height: 200px;
+            min-height: 200px;
+            height: auto;
             overflow: hidden;
             .video{
                 width: 100%;
+                height: auto;
             }
         }
     }
