@@ -1,13 +1,17 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-28 10:53:17
- * @LastEditTime: 2020-11-03 14:54:39
- * @LastEditors: your name
+ * @LastEditTime: 2020-11-09 10:51:11
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\src\App.vue
 -->
 <template>
   <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
     <router-view/>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-05 15:32:49
+ * @LastEditTime: 2020-11-10 16:46:17
  * @LastEditors: Please set LastEditors
  * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
@@ -10,8 +10,8 @@
   <div class="video-list">
     <div class="msg">
       <el-radio v-model="allSelect" label="1">全选</el-radio>
-      <p>【已加载：{{ videoList.length }} 选择：0】</p>
-      <p class="btn" @click="downvideo()">批量下载所选</p>
+      <p>【已加载：{{ videoList.length }} 选择：{{ selectedList.length }}】</p>
+      <el-button class="btn" :disabled="!selectedList.length" @click="downvideo">批量下载所选</el-button>
     </div>
 
     <div class="main" v-InfiniteScroll="{methods: getVideoList, status: true, allTotal, dataListLen: videoList.length}">
@@ -23,7 +23,7 @@
           <p class="title">{{ item.desc }}</p>
         </el-tooltip>
         <el-button class="btn" size="mini">下载视频</el-button>
-        <el-checkbox v-model="item.select"></el-checkbox>
+        <el-checkbox v-model="item.select" @change="changeCheckbox(item, $event, index)"></el-checkbox>
       </div>
     </div>
   </div>
@@ -53,7 +53,8 @@ export default class VideoList extends Vue {
   // 总条数
   allTotal: number = 100;
   $db: any;
-
+  // 已经选中的视频
+  selectedList: VideoListFace[] = [];
   // 获取视频列表
   private getVideoList() {
     console.log('获取视频列表')
@@ -62,7 +63,19 @@ export default class VideoList extends Vue {
   downvideo() {
     if (!this.saveDirectoryVideo) {
       ipcRenderer.send('ShowSaveDirectory');
+    } else {
+      ipcRenderer.send('DownVideo', this.selectedList, this.saveDirectoryVideo);
     }
+  }
+
+  // 选择视频
+  changeCheckbox(row: VideoListFace, status: boolean, index: number) {
+    if (status) {
+      this.selectedList.push(row)
+    } else {
+      this.selectedList.splice(index,1)
+    }
+    // console.log(row,status, index, this.selectedList)
   }
 }
 </script>
@@ -82,7 +95,6 @@ export default class VideoList extends Vue {
         .btn{
             @include br(20px);
             background: $background;
-            padding: 0 10px;
             color: #fff;
         }
     }

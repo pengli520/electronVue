@@ -1,6 +1,7 @@
 {
   "name": "test",
   "version": "0.1.0",
+  "description": "test",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +10,8 @@
     "electron:build": "vue-cli-service electron:build",
     "e": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "dist": "electron-builder --win --x64"
   },
   "main": "background.js",
   "dependencies": {

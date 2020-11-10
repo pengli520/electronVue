@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-06 16:34:13
+ * @LastEditTime: 2020-11-10 16:50:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -62,6 +62,13 @@ ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
   })
 })
 
+// 下载视频 
+ipcMain.on('DownVideo', async(event, list, saveDirectory) => {
+  const douYin = new douYiVideo({saveDirectory});
+  for (const item of list) {
+    await douYin.videoParsing(item.videoUrl, item.desc)
+  }
+})
 
 ipcMain.on('getProcessPath', (event, arg) => {
   console.log(event, arg)
