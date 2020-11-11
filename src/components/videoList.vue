@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-10 16:46:17
+ * @LastEditTime: 2020-11-11 14:26:08
  * @LastEditors: Please set LastEditors
  * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
@@ -23,7 +23,7 @@
           <p class="title">{{ item.desc }}</p>
         </el-tooltip>
         <el-button class="btn" size="mini">下载视频</el-button>
-        <el-checkbox v-model="item.select" @change="changeCheckbox(item, $event, index)"></el-checkbox>
+        <el-checkbox v-model="item.select" @change="changeCheckbox(item, $event)"></el-checkbox>
       </div>
     </div>
   </div>
@@ -32,17 +32,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { State, namespace, Mutation } from 'vuex-class';
+import { showLoading, hideLoading, message } from '@/util/common.ts';
 import $store from '@/store/index.ts'
 const { ipcRenderer } = window.require('electron')
-// 获取视频列表
-ipcRenderer.on('BackGetDouYiPlayUrl', (event: any, arg: any) => {
-  $store.commit('setVideoList', arg)
-  console.log(arg, $store)
-})
 interface VideoListFace {
   cover: string; // 视频封面
   desc: string; // 标题
   videoUrl: string; // 视频地址
+  id: string; // 视频id
 }
 @Component
 export default class VideoList extends Vue {
@@ -64,18 +61,47 @@ export default class VideoList extends Vue {
     if (!this.saveDirectoryVideo) {
       ipcRenderer.send('ShowSaveDirectory');
     } else {
+      showLoading();
       ipcRenderer.send('DownVideo', this.selectedList, this.saveDirectoryVideo);
     }
   }
 
   // 选择视频
-  changeCheckbox(row: VideoListFace, status: boolean, index: number) {
+  changeCheckbox(row: VideoListFace, status: boolean) {
     if (status) {
       this.selectedList.push(row)
     } else {
-      this.selectedList.splice(index,1)
+      this.selectedList.find((item: VideoListFace, index: number) => {
+        if (item.id === row.id) {
+          this.selectedList.splice(index,1)
+          return true
+        }
+      })
     }
-    // console.log(row,status, index, this.selectedList)
+  }
+
+  mounted() {
+    // 获取视频列表
+    ipcRenderer.on('BackGetDouYiPlayUrl', (event: any, arg: any) => {
+      $store.commit('setVideoList', arg)
+      hideLoading()
+    })
+
+    // 视频下载成功回调
+    ipcRenderer.on('BackDownVideo', (event: any, res: any) => {
+      if (res.code !== 0) {
+        message({
+            message: res.err || '下载失败',
+            type: 'error'
+        });
+      } else {
+        message({
+            message: '下载成功',
+        });
+      }
+      hideLoading()
+    })
+    
   }
 }
 </script>

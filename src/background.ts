@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-10 16:50:59
+ * @LastEditTime: 2020-11-11 14:24:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -39,7 +39,6 @@ ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
   const douYin = new douYiVideo({userUrl});
   const list = await douYin.shareCodeParsing();
   event.reply('BackGetDouYiPlayUrl', list);
-  console.log(douYin);
 })
 // 获取保存视频文件夹
 ipcMain.on('ShowSaveDirectory', async (event, arg) => {
@@ -51,23 +50,28 @@ ipcMain.on('ShowSaveDirectory', async (event, arg) => {
 })
 // 合成视频
 ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
+  console.log(222)
   const fileName = +new Date();
   const ffmpeg = new ffmpegCmd({absolutePath, fileName });
   ffmpeg.init().then((res: any) => {
     event.reply('BackCmdMergeVideo', res);
   })
   .catch(err => {
-    event.reply('BackCmdMergeVideo', false);
-    console.log(err);
+    event.reply('BackCmdMergeVideo', err);
   })
 })
 
 // 下载视频 
 ipcMain.on('DownVideo', async(event, list, saveDirectory) => {
   const douYin = new douYiVideo({saveDirectory});
+  let arr = [];
   for (const item of list) {
-    await douYin.videoParsing(item.videoUrl, item.desc)
+    const data = await douYin.videoParsing(item.videoUrl, item.desc)
+    if (data.code) {
+      arr.push(data);
+    }
   }
+  event.reply('BackDownVideo', {code: arr.length ? 1 : 0, err: arr.length + '文件下载失败'})
 })
 
 ipcMain.on('getProcessPath', (event, arg) => {

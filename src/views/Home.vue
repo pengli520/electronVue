@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-05 16:04:15
+ * @LastEditTime: 2020-11-11 10:27:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -24,11 +24,10 @@
 import optionInput from '@/components/optionInput.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import videoList from '@/components/videoList.vue';
-import { Loading } from 'element-ui';
 import dealWith from '@/components/dealWith.vue';
+import { showLoading, hideLoading } from '@/util/common.ts';
 import db from '@/nodeModule/db.ts';
 import store from '@/store/index.ts';
-// Loading.service({ fullscreen: true });
 const { ipcRenderer } = window.require('electron')
 ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
   console.log(arg)
@@ -59,6 +58,7 @@ export default class OptionInput extends Vue {
 
   // 搜索
   search(val: String) {
+    showLoading()
     ipcRenderer.send('GetDouYiPlayUrl', val);
   }
 

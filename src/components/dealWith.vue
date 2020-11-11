@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-06 16:59:37
+ * @LastEditTime: 2020-11-11 14:33:13
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -17,33 +17,18 @@
             </div>
         </div>
         <pl-sort-mode :list="videoUrl"/>
-        <!-- :disabled="false || !videoUrl.length" -->
-        <el-button type="success" class="btn" @click="videoMerge" >合并视频</el-button>
+        <el-button type="success" :disabled="videoUrl.length < 2" class="btn" @click="videoMerge" >合并视频</el-button>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Message } from 'element-ui';
 import sortMode from '@/components/sortMode.vue';
 import { State, namespace, Mutation } from 'vuex-class';
+import { showLoading, hideLoading, message } from '@/util/common.ts';
 const { ipcRenderer } = window.require('electron');
 import $store from '@/store/index.ts'
-
 const fs = window.require('fs')
-// 合成视频地址
-ipcRenderer.on('BackCmdMergeVideo', (event: any, arg: Blob) => {
-    const binary = fs.readFileSync(arg);
-    let file = new File([binary],'1.mp4',{type:'video/mp4'})
-    let path = window.URL.createObjectURL(file);
-    console.log(path, arg)
-    $store.commit('setMergedVideopath', path)
-    // let times = setTimeout(() => {
-    //     window.URL.revokeObjectURL(path);
-    //     clearTimeout(times)
-    // }, 1000)
-})
-
 interface VideoUrl {
     path: string; // 临时文件路径
     absolutePath: string; // 绝对地址
@@ -77,7 +62,7 @@ export default class DealWith extends Vue {
                             absolutePath: item.path.replace(/\\/g, '\\\\'),
                         })
                     } else {
-                        Message({
+                        message({
                             type: 'error',
                             message: '请上传视频文件'
                         });
@@ -87,42 +72,45 @@ export default class DealWith extends Vue {
         })    
         dragWrapper.addEventListener("dragover",(e: any)=>{
             e.preventDefault();
-        })    
+        })  
+        this._BackCmdMergeVideo()  
     }
 
     // 合成视频
     videoMerge() {
+        showLoading('合成视频中')
         $store.commit('setMergedVideopath', '');
-        this.produceTxt();
-        setTimeout(() => {
-            ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
-        }, 3000)
-    }
-
-    // 生成txt
-    produceTxt() {
         // 合成文件名
         const fileName: string = `${this.saveDirectoryVideo}/1.txt`;
         let txt = '';
         for (const item of this.videoUrl) {
             txt += `file ${item.absolutePath} \n`;
         }
-        fs.writeFileSync(fileName, txt, (error: any) => { 
-            if(error) { 
-                console.log('错诶'+error)
-            }
-        })
-        // fs.readFile(fileName, 'utf8', (error: string, data: any) => { 
-        //     if (error) {
+        const status = fs.writeFileSync(fileName, txt);
+        ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
 
-        //     } else {
-        //         fs.appendFile(fileName, txt, (error: any) => { 
-        //             if(error) { 
-        //                 console.log(error)
-        //             }
-        //         })
-        //     }
-        // })
+    }
+    // 合成视频地址
+    _BackCmdMergeVideo() {
+        ipcRenderer.on('BackCmdMergeVideo', (event: any, res: any) => {
+            console.log(res, '返回数据')
+            if (+res.code === 0) {
+                const binary = fs.readFileSync(res.content);
+                let file = new File([binary],'1.mp4',{type:'video/mp4'})
+                let path = window.URL.createObjectURL(file);
+                $store.commit('setMergedVideopath', path)
+            } else {
+                message({
+                    message: res.err || '合成失败',
+                    type: 'error'
+                });
+            }
+            hideLoading()
+            // let times = setTimeout(() => {
+            //     window.URL.revokeObjectURL(path);
+            //     clearTimeout(times)
+            // }, 1000)
+        })
     }
 }
 </script>
@@ -157,5 +145,9 @@ export default class DealWith extends Vue {
         @include ma;
         margin-top: 20px;
     }
+    
 }
 </style>
+
+
+

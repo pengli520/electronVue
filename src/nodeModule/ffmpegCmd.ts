@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:55:54
- * @LastEditTime: 2020-11-05 17:37:37
+ * @LastEditTime: 2020-11-11 11:46:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\ffmpegCmd.ts
@@ -24,10 +24,9 @@ export default class ffmpegCmd {
             child.exec(cmd, (err: any, stdout: any, stderr: any) => {
                 if (err) {
                     console.error('错误', JSON.stringify(err));
-                    reject(false);
-                    return;
+                    return reject({code: 1, err});
                 }
-                resolve(this.option.absolutePath + '\\' + this.option.fileName + '.mp4')
+                resolve({code: 0, content: this.option.absolutePath + '\\' + this.option.fileName + '.mp4'})
             });
         });
 

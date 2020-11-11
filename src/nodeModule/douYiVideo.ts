@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-10 16:48:52
+ * @LastEditTime: 2020-11-11 14:44:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -69,14 +69,16 @@ export default class downVideo  {
     userInfo(path: string) {
         return got(path).then((resList: any) => {
             const res = JSON.parse(resList.body);
+            // console.log(res)
             // 视频地址
             const videoArr = [];
             for (let item of res.aweme_list) {
                 videoArr.push({
                     videoUrl: this.videoUrl.replace('playwm', 'play') + item.video.vid,
-                    desc: item.desc,
+                    desc: item.desc.replace(/\s+/g, ''),
                     cover: item.video.cover.url_list[0],
                     select: false,
+                    id: item.video.vid,
                 });
             }
             return videoArr;
@@ -90,28 +92,37 @@ export default class downVideo  {
         // const homeDir = __dirname || os.homedir()   //获取用户主目录地址
         const filename = path.join(this.option.saveDirectory, name)  //组装文件存放地址
         const file = fs.createWriteStream(filename)   //生成一个写入文件的流
-        let httpType
+        let httpType: any
         if (url.split('://')[0] === 'http') {   //判断是什么类型的请求
             httpType = http
         } else {
             httpType = https
         }
-
-        httpType.get(url, (response: any) => {
-            response.pipe(file)    //将文件流写入
-            response.on('end', () => {
-                console.log(filename)
-            })
-            response.on('error', (err: any) => {
-                console.log(err)
+        return new Promise((resolve,reject) => {
+            httpType.get(url, (response: any) => {
+                response.pipe(file)    //将文件流写入
+                response.on('end', () => {
+                    resolve({
+                        code: 0,
+                        err: filename
+                    })
+                })
+                response.on('error', (err: any) => {
+                    console.log(err)
+                    reject({
+                        code: 1,
+                        err: filename
+                    })
+                })
             })
         })
+
     }
 
     // 视频地址解析
     videoParsing(path: string, name: string) {
         return got(path).then((res: any) => {
-            this.downFile(res.url, `${name}${+new Date()}.mp4`)
+            return this.downFile(res.url, `${name}${+new Date()}.mp4`)
         }).catch((err: any) => {
             console.log('视频地址解析', err)
         })
