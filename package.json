@@ -3,6 +3,10 @@
   "version": "0.2.0",
   "description": "test2",
   "private": true,
+  "build": {
+    "appId": "Download",
+    "files": ["**/*", "build/icon.*"]
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -11,7 +15,7 @@
     "e": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "dist": "electron-builder --win --x64"
+    "package": "electron-packager ./"
   },
   "main": "background.js",
   "dependencies": {
