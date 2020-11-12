@@ -1,13 +1,13 @@
 {
   "name": "test",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "test2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "b": "vue-cli-service electron:build",
     "e": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
@@ -41,6 +41,8 @@
     "@vue/cli-service": "~4.5.0",
     "electron": "^9.0.0",
     "electron-devtools-installer": "^3.1.0",
+    "ffmpeg-static": "^4.2.7",
+    "ffprobe-static": "^3.0.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
     "vue-template-compiler": "^2.6.11"
@@ -49,5 +51,6 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "__npminstall_done": false
 }

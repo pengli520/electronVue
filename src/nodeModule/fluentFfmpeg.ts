@@ -1,25 +1,31 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:58:16
- * @LastEditTime: 2020-11-12 11:11:26
+ * @LastEditTime: 2020-11-12 18:15:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\fluentFfmpeg.ts
  */
 const ffmpeg = require('fluent-ffmpeg');
-
 const path = require('path');
 // ffmpeg.setFfmpegPath("/ffmpeg/win/ffmpeg.exe");
 // ffmpeg.setFfprobePath("/ffmpeg/win/ffprobe.exe")
+interface Option {
+    absolutePath: string; // 绝对地址
+    fileName: number; // 文件名字
+}
 export default class fluentFfmpeg{
+    option: Option;
     constructor(option: any) {
+        this.option = option;
         this.init()
     }
     init() {
     console.log(ffmpeg.path);
-        process.chdir('dist_electron')
+        process.chdir(this.option.absolutePath)
         console.log(process.cwd())
         console.time() 
+        console.log(ffmpeg)
         ffmpeg('1.mp4')
         .inputOptions(
             '-ss', '00:00:02',

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-11 14:24:02
+ * @LastEditTime: 2020-11-12 18:02:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -72,6 +72,13 @@ ipcMain.on('DownVideo', async(event, list, saveDirectory) => {
     }
   }
   event.reply('BackDownVideo', {code: arr.length ? 1 : 0, err: arr.length + '文件下载失败'})
+})
+
+// 生成图片
+ipcMain.on('GenerateImage', (event, absolutePath) => {
+  new fluentFfmpeg({absolutePath})
+  console.log(event, absolutePath)
+  // event.reply('BackGenerateImage', getProcessPath())
 })
 
 ipcMain.on('getProcessPath', (event, arg) => {

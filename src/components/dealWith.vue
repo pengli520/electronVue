@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-11 14:33:13
+ * @LastEditTime: 2020-11-12 18:04:33
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
 -->
 <template>
     <div class="deal-with">
-        <div class="main" id="main">
+        <div class="main" id="main" @click="initImage">
             <div class="import-video">视频拖在这里</div>
             <div class="synthetic-video">
                 <video class="video" v-if="mergedVideopath" preload controls>
@@ -84,7 +84,7 @@ export default class DealWith extends Vue {
         const fileName: string = `${this.saveDirectoryVideo}/1.txt`;
         let txt = '';
         for (const item of this.videoUrl) {
-            txt += `file ${item.absolutePath} \n`;
+            txt += `file ${item.absolutePath} \r\n`;
         }
         const status = fs.writeFileSync(fileName, txt);
         ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);
@@ -111,6 +111,11 @@ export default class DealWith extends Vue {
             //     clearTimeout(times)
             // }, 1000)
         })
+    }
+
+    // 生成图片
+    initImage() {
+        ipcRenderer.send('GenerateImage', this.saveDirectoryVideo);
     }
 }
 </script>
