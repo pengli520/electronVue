@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-11 14:26:08
+ * @LastEditTime: 2020-11-12 11:16:00
  * @LastEditors: Please set LastEditors
  * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
@@ -12,6 +12,7 @@
       <el-radio v-model="allSelect" label="1">全选</el-radio>
       <p>【已加载：{{ videoList.length }} 选择：{{ selectedList.length }}】</p>
       <el-button class="btn" :disabled="!selectedList.length" @click="downvideo">批量下载所选</el-button>
+      <el-button class="btn"  @click="modifyDownPath">修改下载地址</el-button>
     </div>
 
     <div class="main" v-InfiniteScroll="{methods: getVideoList, status: true, allTotal, dataListLen: videoList.length}">
@@ -80,6 +81,10 @@ export default class VideoList extends Vue {
     }
   }
 
+  // 修改下载地址
+  modifyDownPath() {
+    ipcRenderer.send('ShowSaveDirectory');
+  } 
   mounted() {
     // 获取视频列表
     ipcRenderer.on('BackGetDouYiPlayUrl', (event: any, arg: any) => {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:58:16
- * @LastEditTime: 2020-10-28 17:21:09
+ * @LastEditTime: 2020-11-12 11:11:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\fluentFfmpeg.ts
@@ -9,6 +9,8 @@
 const ffmpeg = require('fluent-ffmpeg');
 
 const path = require('path');
+// ffmpeg.setFfmpegPath("/ffmpeg/win/ffmpeg.exe");
+// ffmpeg.setFfprobePath("/ffmpeg/win/ffprobe.exe")
 export default class fluentFfmpeg{
     constructor(option: any) {
         this.init()

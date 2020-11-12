@@ -3,10 +3,6 @@
   "version": "0.2.0",
   "description": "test2",
   "private": true,
-  "build": {
-    "appId": "Download",
-    "files": ["**/*", "build/icon.*"]
-  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
