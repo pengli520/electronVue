@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "b": "vue-cli-service electron:build",
+    "b": "vue-cli-service electron:build --mode production",
     "e": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
@@ -39,13 +39,15 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "copy-webpack-plugin": "^6.3.0",
     "electron": "^9.0.0",
     "electron-devtools-installer": "^3.1.0",
     "ffmpeg-static": "^4.2.7",
     "ffprobe-static": "^3.0.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-permissions-plugin": "^1.0.7"
   },
   "browserslist": [
     "> 1%",

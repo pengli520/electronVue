@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-12 18:02:30
+ * @LastEditTime: 2020-11-13 15:00:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -76,9 +76,14 @@ ipcMain.on('DownVideo', async(event, list, saveDirectory) => {
 
 // 生成图片
 ipcMain.on('GenerateImage', (event, absolutePath) => {
-  new fluentFfmpeg({absolutePath})
-  console.log(event, absolutePath)
-  // event.reply('BackGenerateImage', getProcessPath())
+  const fluentFfmpegOne = new fluentFfmpeg({absolutePath})
+  fluentFfmpegOne.init()
+  .then((res) => {
+    event.reply('BackGenerateImage', res)
+  })
+  .catch(err => {
+    event.reply('BackGenerateImage', err)
+  })
 })
 
 ipcMain.on('getProcessPath', (event, arg) => {

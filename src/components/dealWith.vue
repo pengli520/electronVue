@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-12 18:04:33
+ * @LastEditTime: 2020-11-13 15:01:08
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -74,6 +74,7 @@ export default class DealWith extends Vue {
             e.preventDefault();
         })  
         this._BackCmdMergeVideo()  
+        this._BackGenerateImage()
     }
 
     // 合成视频
@@ -115,7 +116,23 @@ export default class DealWith extends Vue {
 
     // 生成图片
     initImage() {
+        showLoading()
         ipcRenderer.send('GenerateImage', this.saveDirectoryVideo);
+    }
+    _BackGenerateImage() {
+        ipcRenderer.on('BackGenerateImage', (event: any, res: any) => {
+            if (+res.code === 0) {
+                message({
+                    message: '图片生成完成',
+                });
+            } else {
+                message({
+                    message: res.err || '图片生成失败',
+                    type: 'error'
+                });
+            }
+            hideLoading()
+        })
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-28 10:53:30
- * @LastEditTime: 2020-11-09 11:32:31
+ * @LastEditTime: 2020-11-13 14:23:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\README.md
@@ -37,3 +37,5 @@ https://www.amemv.com/web/api/v2/aweme/post/?u_code=3cc1kl0ldef9&sec_uid=MS4wLjA
 ffmpeg -y -f concat -safe 0 -i 1.txt -c copy out.mp4
 
 ffmpeg -i 2.mp4 -c:v libx264 -strict -2 3.mp4
+
+ffmpeg -i 1.mp4 -t 10 -s 320x240 -pix_fmt rgb24 jidu1.gif
