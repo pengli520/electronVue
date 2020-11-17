@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-10-28 10:53:17
+ * @LastEditTime: 2020-11-17 11:49:44
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \electronVue\src\router\index.ts
+ */
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Home from '../views/Home.vue';

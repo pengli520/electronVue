@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:55:54
- * @LastEditTime: 2020-11-17 10:56:51
+ * @LastEditTime: 2020-11-17 11:44:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\ffmpegCmd.ts

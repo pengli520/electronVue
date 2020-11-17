@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-17 10:51:04
+ * @LastEditTime: 2020-11-17 11:08:44
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -20,6 +20,7 @@
         </div>
         <pl-sort-mode :list="videoUrl"/>
         <el-button type="success" :disabled="videoUrl.length < 2" class="btn" @click="videoMerge" >合并视频</el-button>
+        <p @click="initImage">生成图片</p>
     </div>
 </template>
 

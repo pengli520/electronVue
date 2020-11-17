@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-11 10:27:49
+ * @LastEditTime: 2020-11-17 11:45:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -54,7 +54,7 @@ ipcRenderer.on('BackShowSaveDirectory', (event: any, arg: any) => {
 })
 export default class OptionInput extends Vue {
   // 导航下标
-  activeIndex: string = '1';
+  activeIndex: string = '0';
 
   // 搜索
   search(val: String) {
