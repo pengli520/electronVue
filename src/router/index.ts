@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 10:53:17
- * @LastEditTime: 2020-11-17 11:49:44
+ * @LastEditTime: 2020-11-17 11:51:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\src\router\index.ts
@@ -29,7 +29,7 @@ const routes: RouteConfig[] = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });

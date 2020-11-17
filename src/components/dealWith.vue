@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-17 11:08:44
+ * @LastEditTime: 2020-11-17 13:29:28
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -64,8 +64,7 @@ export default class DealWith extends Vue {
     }
     // 验证选择视频
     checkVideo(e: any) {
-        console.log(e)
-        const files: any = e.target ? e.target.files : e.dataTransfer.files;
+        const files: any = e.target.files ? e.target.files : e.dataTransfer.files;
         if (files && files.length>=1){
             for (const item of files) {
                 const arr = item.path.split('.');

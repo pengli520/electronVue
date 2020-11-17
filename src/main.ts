@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-17 11:46:23
+ * @LastEditTime: 2020-11-17 11:52:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\main.ts
@@ -26,7 +26,7 @@ Vue.config.productionTip = false;
     store.commit('setSaveDirectoryVideo', data.videoSaveDirectory);
   }
 })
-router.push({name: 'Home'})
+
 Vue.directive('InfiniteScroll', {
   update(el: any, binding) {
       el.onscroll = function() {
