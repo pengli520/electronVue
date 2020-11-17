@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:18:37
- * @LastEditTime: 2020-11-13 14:36:18
+ * @LastEditTime: 2020-11-17 10:50:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\vue.config.js
@@ -14,12 +14,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const PermissionsOutputPlugin = require("webpack-permissions-plugin");
 const { platform, arch } = process;
 
-// ffmpegStatic: 'D:\\gitup\\electronVue\\node_modules\\_ffmpeg-static@4.2.7@ffmpeg-static\\ffmpeg.exe',
-// ffprobeStatic: 'D:\\gitup\\electronVue\\node_modules\\_ffprobe-static@3.0.0@ffprobe-static\\bin\\win32\\x64\\ffprobe.exe',
-
 process.env.ffmpegStatic = ffmpegStatic
 process.env.ffprobeStatic = ffprobeStatic.path
-// D:\gitup\electronVue\node_modules\_ffmpeg-static@4.2.7@ffmpeg-static\ffmpeg.exe
 
 let plugins = [];
 if (process.env.NODE_ENV === "production") {

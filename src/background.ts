@@ -53,7 +53,7 @@ ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
   console.log(222)
   const fileName = +new Date();
   const ffmpeg = new ffmpegCmd({absolutePath, fileName });
-  ffmpeg.init().then((res: any) => {
+  ffmpeg.merge().then((res: any) => {
     event.reply('BackCmdMergeVideo', res);
   })
   .catch(err => {

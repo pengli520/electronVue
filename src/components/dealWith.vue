@@ -1,15 +1,17 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-13 15:01:08
+ * @LastEditTime: 2020-11-17 10:51:04
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
 -->
 <template>
     <div class="deal-with">
-        <div class="main" id="main" @click="initImage">
-            <div class="import-video">视频拖在这里</div>
+        <div class="main" id="main">
+            <div class="import-video">视频拖在这里
+                <input type="file" class="file" multiple @change="checkVideo">
+            </div>
             <div class="synthetic-video">
                 <video class="video" v-if="mergedVideopath" preload controls>
                     <source :src="mergedVideopath" type='video/mp4'>
@@ -50,33 +52,37 @@ export default class DealWith extends Vue {
         const dragWrapper: any = document.getElementById("main");
         dragWrapper.addEventListener("drop",(e: any)=>{
             e.preventDefault(); //阻止e的默认行为
-            const files: any = e.dataTransfer.files;
-            if (files && files.length>=1){
-                for (const item of files) {
-                    const arr = item.path.split('.');
-                    const suffix = arr[arr.length - 1].toUpperCase();
-                    if (this.videoFormat.includes(suffix)) {
-                        console.log(item.path, item.path.replace(/\\/g, '\\\\'));
-                        this.videoUrl.push({
-                            path: window.URL.createObjectURL(item),
-                            absolutePath: item.path.replace(/\\/g, '\\\\'),
-                        })
-                    } else {
-                        message({
-                            type: 'error',
-                            message: '请上传视频文件'
-                        });
-                    }
-                }
-            }
+            this.checkVideo(e)
         })    
         dragWrapper.addEventListener("dragover",(e: any)=>{
             e.preventDefault();
         })  
         this._BackCmdMergeVideo()  
         this._BackGenerateImage()
+        this._BackSelectVideo()
     }
-
+    // 验证选择视频
+    checkVideo(e: any) {
+        console.log(e)
+        const files: any = e.target ? e.target.files : e.dataTransfer.files;
+        if (files && files.length>=1){
+            for (const item of files) {
+                const arr = item.path.split('.');
+                const suffix = arr[arr.length - 1].toUpperCase();
+                if (this.videoFormat.includes(suffix)) {
+                    this.videoUrl.push({
+                        path: window.URL.createObjectURL(item),
+                        absolutePath: item.path.replace(/\\/g, '\\\\'),
+                    })
+                } else {
+                    message({
+                        type: 'error',
+                        message: '请上传视频文件'
+                    });
+                }
+            }
+        }        
+    }
     // 合成视频
     videoMerge() {
         showLoading('合成视频中')
@@ -119,6 +125,7 @@ export default class DealWith extends Vue {
         showLoading()
         ipcRenderer.send('GenerateImage', this.saveDirectoryVideo);
     }
+    // 图片回调
     _BackGenerateImage() {
         ipcRenderer.on('BackGenerateImage', (event: any, res: any) => {
             if (+res.code === 0) {
@@ -132,6 +139,12 @@ export default class DealWith extends Vue {
                 });
             }
             hideLoading()
+        })
+    }
+    // 选择视频回调
+    _BackSelectVideo() {
+        ipcRenderer.on('BackSelectVideo', (event: any, files: any) => {
+            this.checkVideo(files)
         })
     }
 }
@@ -151,6 +164,15 @@ export default class DealWith extends Vue {
             height: 200px;
             line-height: 200px;
             text-align: center;
+            position: relative;
+            .file{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left:0;
+                opacity: 0;
+            }
         }
         .synthetic-video{
             width: 200px;
