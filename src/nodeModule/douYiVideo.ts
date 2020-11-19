@@ -1,11 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-11 14:44:41
+ * @LastEditTime: 2020-11-18 11:07:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
  */
+
 
 const got = require('got');
 const express = require('express');
@@ -48,7 +49,8 @@ export default class downVideo  {
         return got(this.option.userUrl, {
             timeout: 10000
         }).then((response: any) => {
-            console.log(response.url);
+            delete response.body;
+            console.log(response);
             let arr = response.url.split('?');
             // 获取用户 sec_uid
             let param = qs.parse(arr[1]);
@@ -69,7 +71,6 @@ export default class downVideo  {
     userInfo(path: string) {
         return got(path).then((resList: any) => {
             const res = JSON.parse(resList.body);
-            // console.log(res)
             // 视频地址
             const videoArr = [];
             for (let item of res.aweme_list) {

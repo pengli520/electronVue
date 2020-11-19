@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:58:16
- * @LastEditTime: 2020-11-13 15:21:56
+ * @LastEditTime: 2020-11-19 18:05:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\nodeModule\fluentFfmpeg.ts
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
   ffprobePath = path.join(basePath,'ffprobe.exe');
 }
 
-console.log(ffmpegPath, ffprobePath, '******')
+// console.log(ffmpegPath, ffprobePath, '******')
 
 // 设置 fluent-ffmpeg 的 ffmpeg 、ffprobe路径
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -38,7 +38,6 @@ export default class fluentFfmpeg{
     }
     init() {
         process.chdir(this.option.absolutePath)
-        console.log(11)
         return new Promise((resolve, reject) => {
             ffmpeg('1.mp4')
             .inputOptions(

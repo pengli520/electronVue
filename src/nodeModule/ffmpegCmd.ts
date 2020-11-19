@@ -1,9 +1,9 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:55:54
- * @LastEditTime: 2020-11-17 11:44:34
+ * @LastEditTime: 2020-11-19 18:13:04
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
+ * @Description: 执行命令行 命令是空格需要双引号包裹，不然报错
  * @FilePath: \test\src\nodeModule\ffmpegCmd.ts
  */
 import path from "path";
@@ -16,7 +16,8 @@ if (process.env.NODE_ENV === "production") {
   ffmpegPath = path.join(basePath,'ffmpeg.exe');
   ffprobePath = path.join(basePath,'ffprobe.exe');
 }
-console.log(process.env.NODE_ENV,ffmpegPath)
+let ffmpegPathStr = `"${ffmpegPath}"`;
+ffprobePath = `"${ffprobePath}"`;
 interface Option {
     absolutePath: string; // 绝对地址
     fileName: number; // 文件名字
@@ -45,7 +46,7 @@ export default class ffmpegCmd {
     // 合并视频
     merge() {
         return new Promise((resolve, reject) => {
-            exec(`${ffmpegPath} -h`, (err: string) => {
+            exec(`${ffmpegPathStr} -h`, (err: string) => {
                 if (err) {
                     return reject({
                         code: 1,
@@ -53,7 +54,8 @@ export default class ffmpegCmd {
                     })
                 }
                 process.chdir(this.option.absolutePath)
-                const mergeVideo = spawn(`${ffmpegPath}`, ['-y', '-f', 'concat', '-safe', 0, '-i', '1.txt', '-c', 'copy', `${this.option.fileName}.mp4`]);
+                console.log(ffmpegPath)
+                const mergeVideo = spawn(ffmpegPath, ['-y', '-f', 'concat', '-safe', 0, '-i', '1.txt', '-c', 'copy', `${this.option.fileName}.mp4`]);
                 mergeVideo.stdout.on('data', (data: any) => {
                     console.log(`stdout--------: ${data}`);
                 });
@@ -61,11 +63,8 @@ export default class ffmpegCmd {
                     console.error(`stderr: ${data}`);
                 });
                 mergeVideo.on('close', (code: number) => {
-                    console.log(`子进程退出，退出码 ${code}`);
-                });
-                mergeVideo.on('close', (code: number) => {
                     if (code !== 0) {
-                      console.log(`ps 进程退出，退出码 ${code}`);
+                        console.log(`ps 进程退出，退出码 ${code}`);
                         return reject({
                             code: 1,
                             err: '程序错误',
