@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-20 09:26:45
+ * @LastEditTime: 2020-11-20 13:21:44
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -94,7 +94,7 @@ export default class DealWith extends Vue {
         const fileName: string = `${this.saveDirectoryVideo}/1.txt`;
         let txt = '';
         for (const item of this.videoUrl) {
-            txt += `file "${item.absolutePath}" \r\n`;
+            txt += `file '${item.absolutePath}' \r\n`;
         }
         const status = fs.writeFileSync(fileName, txt);
         ipcRenderer.send('CmdMergeVideo', this.saveDirectoryVideo);

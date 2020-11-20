@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 15:55:54
- * @LastEditTime: 2020-11-19 18:13:04
+ * @LastEditTime: 2020-11-20 13:21:06
  * @LastEditors: Please set LastEditors
  * @Description: 执行命令行 命令是空格需要双引号包裹，不然报错
  * @FilePath: \test\src\nodeModule\ffmpegCmd.ts
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "production") {
 let ffmpegPathStr = `"${ffmpegPath}"`;
 ffprobePath = `"${ffprobePath}"`;
 interface Option {
-    absolutePath: string; // 绝对地址
+    absolutePath: string; // 下载地址
     fileName: number; // 文件名字
 }
 export default class ffmpegCmd {
@@ -27,22 +27,6 @@ export default class ffmpegCmd {
     constructor(option: Option) {
         this.option = option;
     }
-    init() {
-        const cmd = `ffmpeg -y -f concat -safe 0 -i 1.txt -c copy ${this.option.fileName}.mp4`
-        process.chdir(this.option.absolutePath)
-        console.log(process.cwd())
-        return new Promise((resolve, reject) => {
-            exec(cmd, (err: any, stdout: any, stderr: any) => {
-                if (err) {
-                    console.error('错误', JSON.stringify(err));
-                    return reject({code: 1, err: JSON.stringify(err)});
-                }
-                resolve({code: 0, content: this.option.absolutePath + '\\' + this.option.fileName + '.mp4'})
-            });
-        });
-
-    }
-
     // 合并视频
     merge() {
         return new Promise((resolve, reject) => {
@@ -53,15 +37,23 @@ export default class ffmpegCmd {
                         err: err.toString(),
                     })
                 }
-                process.chdir(this.option.absolutePath)
-                console.log(ffmpegPath)
-                const mergeVideo = spawn(ffmpegPath, ['-y', '-f', 'concat', '-safe', 0, '-i', '1.txt', '-c', 'copy', `${this.option.fileName}.mp4`]);
+                console.log(process.cwd(), '---', this.option.absolutePath);
+                const mergeVideo = spawn(ffmpegPathStr, ['-y', '-f', 'concat', '-safe', 0, '-i', '1.txt', '-c', 'copy', `${this.option.fileName}.mp4`],
+                {
+                    cwd: this.option.absolutePath,
+                    windowsVerbatimArguments: true,
+                    shell: true
+                });
+                console.log(process.cwd(), '---');
                 mergeVideo.stdout.on('data', (data: any) => {
                     console.log(`stdout--------: ${data}`);
                 });
                 mergeVideo.stderr.on('data', (data: any) => {
                     console.error(`stderr: ${data}`);
                 });
+                mergeVideo.on('error', (err: any) => {
+                    console.error('启动子进程失败', err);
+                  });
                 mergeVideo.on('close', (code: number) => {
                     if (code !== 0) {
                         console.log(`ps 进程退出，退出码 ${code}`);

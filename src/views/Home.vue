@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-17 11:45:42
+ * @LastEditTime: 2020-11-20 10:47:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -25,24 +25,10 @@ import optionInput from '@/components/optionInput.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import videoList from '@/components/videoList.vue';
 import dealWith from '@/components/dealWith.vue';
-import { showLoading, hideLoading } from '@/util/common.ts';
+import { showLoading, hideLoading, message } from '@/util/common.ts';
 import db from '@/nodeModule/db.ts';
 import store from '@/store/index.ts';
 const { ipcRenderer } = window.require('electron')
-ipcRenderer.on('getProcessPath', (event: any, arg: any) => {
-  console.log(arg)
-})
-
-
-// 视频下载目录
-ipcRenderer.on('BackShowSaveDirectory', (event: any, arg: any) => {
-  db.insert({videoSaveDirectory: arg}).then((res: any) => {
-    store.commit('setSaveDirectoryVideo', arg);
-    console.log(res, '返回');
-  });
-  
-})
-
 
 @Component({
   name: 'Home',
@@ -64,6 +50,22 @@ export default class OptionInput extends Vue {
 
   handleClick(val: any) {
       // console.log(val)
+  }
+
+  mounted() {
+    // 视频下载目录
+    ipcRenderer.on('BackShowSaveDirectory', (event: any, arg: any) => {
+      db.remove({}).then(() => {
+        db.insert({videoSaveDirectory: arg}).then((res: any) => {
+          store.commit('setSaveDirectoryVideo', arg);
+          console.log(res, '返回');
+          message({
+              message: res.code ? '设置失败' : '成功',
+              type: res.code ? 'error' : '',
+          });
+        });
+      })
+    })
   }
 
 }
