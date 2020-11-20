@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 17:37:29
- * @LastEditTime: 2020-11-19 17:45:33
+ * @LastEditTime: 2020-11-20 09:26:45
  * @LastEditors: Please set LastEditors
  * @Description: 视频合并列表
  * @FilePath: \electronVue\src\components\dealWith.vue
@@ -85,6 +85,9 @@ export default class DealWith extends Vue {
     }
     // 合成视频
     videoMerge() {
+        if (!this.saveDirectoryVideo) {
+            return ipcRenderer.send('ShowSaveDirectory');
+        }
         showLoading('合成视频中')
         $store.commit('setMergedVideopath', '');
         // 合成文件名

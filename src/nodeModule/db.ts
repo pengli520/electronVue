@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-05 09:49:45
- * @LastEditTime: 2020-11-05 15:18:29
+ * @LastEditTime: 2020-11-20 09:35:03
  * @LastEditors: Please set LastEditors
  * @Description: 本地数据库
  * @FilePath: \electronVue\src\nodeModule\db.ts
@@ -51,6 +51,11 @@ const find = function find(field: object) {
 }
 
 // 修改数据
+/**
+ * 
+ * @param field {_id: number}
+ * @param newField {key: value}
+ */
 const update = function update(field: object, newField: object) {
     return new Promise((resolve, reject) => {
         nedb.update(field,{ $set: newField }, { multi: true }, function (err: any, newDoc: any) {

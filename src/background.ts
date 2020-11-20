@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-13 15:00:19
+ * @LastEditTime: 2020-11-20 09:19:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -50,7 +50,6 @@ ipcMain.on('ShowSaveDirectory', async (event, arg) => {
 })
 // 合成视频
 ipcMain.on('CmdMergeVideo', async (event, absolutePath) => {
-  console.log(222)
   const fileName = +new Date();
   const ffmpeg = new ffmpegCmd({absolutePath, fileName });
   ffmpeg.merge().then((res: any) => {
