@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-20 09:19:23
+ * @LastEditTime: 2020-11-25 11:51:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -16,6 +16,8 @@ import { app, protocol, BrowserWindow, Menu, globalShortcut, ipcMain, dialog, re
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import file from '@/nodeModule/file.ts'
+import kuaishou from '@/nodeModule/kuaishou.ts';
+import huoshan from '@/nodeModule/huoshan.ts';
 const fs = require('fs');
 // 渲染进程和主进程兼容
 const APP = process.type === 'renderer' ? remote.app : app; 
@@ -36,6 +38,9 @@ let win: BrowserWindow | null | any
 
 // 获取用户视频列表
 ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
+  // new kuaishou()
+  new huoshan()
+  return;
   const douYin = new douYiVideo({userUrl});
   const list = await douYin.shareCodeParsing();
   event.reply('BackGetDouYiPlayUrl', list);

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-20 10:47:13
+ * @LastEditTime: 2020-11-23 17:06:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -44,7 +44,7 @@ export default class OptionInput extends Vue {
 
   // 搜索
   search(val: String) {
-    showLoading()
+    // showLoading()
     ipcRenderer.send('GetDouYiPlayUrl', val);
   }
 
