@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-25 11:51:30
+ * @LastEditTime: 2020-11-27 17:36:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -18,6 +18,8 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import file from '@/nodeModule/file.ts'
 import kuaishou from '@/nodeModule/kuaishou.ts';
 import huoshan from '@/nodeModule/huoshan.ts';
+import douYiJiShu from '@/nodeModule/douYiJiShu.ts';
+
 const fs = require('fs');
 // 渲染进程和主进程兼容
 const APP = process.type === 'renderer' ? remote.app : app; 
@@ -36,14 +38,24 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null | any
 
-// 获取用户视频列表
-ipcMain.on('GetDouYiPlayUrl', async (event, userUrl) => {
-  // new kuaishou()
-  new huoshan()
-  return;
-  const douYin = new douYiVideo({userUrl});
-  const list = await douYin.shareCodeParsing();
-  event.reply('BackGetDouYiPlayUrl', list);
+
+/**
+ * 获取用户视频列表
+ * type: number
+ * 1: 抖音极速版 抖音
+ * 3：抖音火山
+ */
+ipcMain.on('GetDouYiPlayUrl', async (event, userUrl, type) => {
+  switch (type) {
+    case 1:
+      const res: any = await new douYiJiShu({userUrl});
+      event.reply('BackGetDouYiPlayUrl', res.content);
+      break;
+    case 3:
+      new huoshan();
+      break;
+  }
+
 })
 // 获取保存视频文件夹
 ipcMain.on('ShowSaveDirectory', async (event, arg) => {
@@ -131,8 +143,8 @@ function createMenu () {
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 200,
+    height: 200,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

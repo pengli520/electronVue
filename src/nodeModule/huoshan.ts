@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-25 11:46:45
- * @LastEditTime: 2020-11-25 16:20:04
+ * @LastEditTime: 2020-11-27 17:40:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\src\nodeModule\huoshan.ts
@@ -26,16 +26,19 @@ interface Option {
     videoUrl: string = 'https://api.huoshan.com/hotsoon/item/video/_source/?video_id=';
     constructor(option?: Option) {
         this.option = option;
-        this.getUrl(this.shareUrl);
+        return this.getUrl(this.shareUrl);
     }
 
     getUrl(shareUrl: string) {
-        got(shareUrl).then((res: any) => {
+        return got(shareUrl).then((res: any) => {
             const to_user_id = qs.parse(res.req.path.split('?')[1]).to_user_id;
-            this.getVideoList(to_user_id);
+            return this.getVideoList(to_user_id);
         })
         .catch((err:any) => {
-            console.log(err)
+            return {
+                code: 1,
+                err,
+            };
         })
     }
 
@@ -46,7 +49,7 @@ interface Option {
             offset: 0,
             count: 30,
         };
-        got(this.getListUrl + qs.stringify(params))
+        return got(this.getListUrl + qs.stringify(params))
         .then(async (res: any) => {
             const body = JSON.parse(res.body);
             const videoArr: any = [];
@@ -67,37 +70,24 @@ interface Option {
                         console.log(err)
                     })
                 }
-                console.log(videoArr);
+                    return {
+                        code: 0,
+                        content: videoArr
+                    };
             } else {
-
+                return {
+                    code: 1,
+                    err: '请求失败',
+                };
             }
         })
         .catch((err: any) => {
             console.log(err)
+            return {
+                code: 1,
+                err,
+            };
         })
     }
     
-    init(path: string){
-        const client = got.extend({
-            headers: {
-                "Host": "live.kuaishou.com",
-                'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
-                'Cookie': 'clientid=3;did=web_6761e010f2f49d8437bf1d6c8e994582;client_key=65890b29;didv=1606117714000',
-                'Accept': 'application/json, text/javascript, */*; q=0.01',
-            }
-        });
-        client.post(path, {
-            json: {
-                count: this.count,
-                eid: "3x824nwsd33ca5e",
-                pcursor: "1.60005729E12",
-            }
-        }).then((res: any) => {
-            console.log('----', Object.keys(res), res)
-        })
-        .catch((err: any) => {
-            console.log(err)
-        });
-    }
  }

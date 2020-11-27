@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-12 11:16:00
+ * @LastEditTime: 2020-11-27 17:06:23
  * @LastEditors: Please set LastEditors
  * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
@@ -147,7 +147,7 @@ export default class VideoList extends Vue {
             background: #f5f5f5;
             .img{
             width: 150px;
-            height: 200px;
+            // height: 200px;
             img{
                 width: 100%;
             }

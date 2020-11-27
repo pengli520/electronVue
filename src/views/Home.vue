@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-10-27 09:57:15
- * @LastEditTime: 2020-11-23 17:06:54
+ * @LastEditTime: 2020-11-27 17:36:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\views\Home.vue
@@ -10,7 +10,7 @@
   <div class="home">
     <el-tabs v-model="activeIndex" @tab-click="handleClick">
         <el-tab-pane label="抖音批量解析" name="0">
-          <pl-option-input :list="[]" @search="search"/>
+          <pl-option-input @search="search"/>
           <pl-video-list/>
         </el-tab-pane>
         <el-tab-pane label="视频编辑" name="1">
@@ -41,11 +41,10 @@ const { ipcRenderer } = window.require('electron')
 export default class OptionInput extends Vue {
   // 导航下标
   activeIndex: string = '0';
-
   // 搜索
-  search(val: String) {
-    // showLoading()
-    ipcRenderer.send('GetDouYiPlayUrl', val);
+  search(val: String, type: number) {
+    showLoading()
+    ipcRenderer.send('GetDouYiPlayUrl', val, type);
   }
 
   handleClick(val: any) {
