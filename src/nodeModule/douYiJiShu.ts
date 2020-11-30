@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-27 17:16:16
+ * @LastEditTime: 2020-11-30 10:56:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -13,7 +13,8 @@ interface Option {
     saveDirectory?: string; // 视频保存地址
 }
 
-
+let maxCursor: number = 0;
+let minCursor: number = 0;
 export default class downVideo  {
     // sec_user_id=MS4wLjABAAAASIgaZVqDUhCG4u3ifEf4cbdoIT-EiSIHP9Xh-1AHgu0
     // .replace(/\s+/g, '')
@@ -54,7 +55,8 @@ export default class downVideo  {
         let params = {
             sec_user_id: sec_uid,
             count: 21,
-            max_cursor: 0
+            max_cursor: maxCursor,
+            min_cursor: minCursor,
         }
         console.log(this.videoListUrl + qs.stringify(params))
         return this.init(this.videoListUrl + qs.stringify(params));
@@ -69,7 +71,9 @@ export default class downVideo  {
             }
         })
         .then((res: any) => {
-            const {aweme_list} = JSON.parse(res.body);
+            const {aweme_list, max_cursor, min_cursor } = JSON.parse(res.body);
+            maxCursor = max_cursor;
+            minCursor = min_cursor;
             // 视频地址
             const videoArr = [];
             for (let item of aweme_list) {

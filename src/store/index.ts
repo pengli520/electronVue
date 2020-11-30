@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 10:53:17
- * @LastEditTime: 2020-11-05 17:00:43
+ * @LastEditTime: 2020-11-30 10:58:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \electronVue\src\store\index.ts
@@ -18,8 +18,9 @@ export default new Vuex.Store({
     mergedVideopath: '', // 合并视频地址
   },
   mutations: {
-    'setVideoList'(state, val){
-      state.videoList = val;
+    'setVideoList'(state, val:[]){
+      console.log(val)
+      state.videoList.push(...val);
     },
     'setSaveDirectoryVideo'(state, val){
       state.saveDirectoryVideo = val;

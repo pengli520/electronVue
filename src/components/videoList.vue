@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-03 16:12:42
- * @LastEditTime: 2020-11-27 17:06:23
+ * @LastEditTime: 2020-11-30 11:06:08
  * @LastEditors: Please set LastEditors
  * @Description: 视频展示列表
  * @FilePath: \electronVue\src\components\videoList.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="video-list">
     <div class="msg">
-      <el-radio v-model="allSelect" label="1">全选</el-radio>
+      <el-checkbox v-model="allSelect" label="1" @change="allSelectList">全选</el-checkbox>
       <p>【已加载：{{ videoList.length }} 选择：{{ selectedList.length }}】</p>
       <el-button class="btn" :disabled="!selectedList.length" @click="downvideo">批量下载所选</el-button>
       <el-button class="btn"  @click="modifyDownPath">修改下载地址</el-button>
@@ -41,10 +41,11 @@ interface VideoListFace {
   desc: string; // 标题
   videoUrl: string; // 视频地址
   id: string; // 视频id
+  select: boolean; // 选择状态
 }
 @Component
 export default class VideoList extends Vue {
-  @State((s) => s.videoList) private videoList!: VideoListFace;
+  @State((s) => s.videoList) private videoList!: any;
   @State((s) => s.saveDirectoryVideo) private saveDirectoryVideo!: string;
   // 是否全选当前记载出来的视频
   allSelect: boolean = false;
@@ -56,6 +57,14 @@ export default class VideoList extends Vue {
   // 获取视频列表
   private getVideoList() {
     console.log('获取视频列表')
+    this.$emit('getVideoList')
+  }
+  // 全部选择
+  allSelectList(val: number) {
+    for (const item of this.videoList) {
+      item.select = val;
+    }
+    val ? this.selectedList = this.videoList : this.selectedList = [];
   }
   // 下载视频
   downvideo() {
@@ -87,8 +96,15 @@ export default class VideoList extends Vue {
   } 
   mounted() {
     // 获取视频列表
-    ipcRenderer.on('BackGetDouYiPlayUrl', (event: any, arg: any) => {
-      $store.commit('setVideoList', arg)
+    ipcRenderer.on('BackGetDouYiPlayUrl', (event: any, res: any) => {
+      if (res.code === 0) {
+        $store.commit('setVideoList', res.content)
+      } else {
+        message({
+          message: res.err + '查询失败',
+          type: 'error'
+        });
+      }
       hideLoading()
     })
 
@@ -147,9 +163,11 @@ export default class VideoList extends Vue {
             background: #f5f5f5;
             .img{
             width: 150px;
-            // height: 200px;
+            height: 200px;
             img{
                 width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
             }
             .title{

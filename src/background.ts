@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-28 11:12:59
- * @LastEditTime: 2020-11-27 17:36:44
+ * @LastEditTime: 2020-11-30 11:04:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \test\src\background.ts
@@ -49,7 +49,7 @@ ipcMain.on('GetDouYiPlayUrl', async (event, userUrl, type) => {
   switch (type) {
     case 1:
       const res: any = await new douYiJiShu({userUrl});
-      event.reply('BackGetDouYiPlayUrl', res.content);
+      event.reply('BackGetDouYiPlayUrl', res);
       break;
     case 3:
       new huoshan();
