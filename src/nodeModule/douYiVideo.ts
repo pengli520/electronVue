@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-18 11:07:00
+ * @LastEditTime: 2020-11-30 11:37:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -44,49 +44,7 @@ export default class downVideo  {
             console.log('Example app listening on port 3000!');
         });
     }
-    // 用户分享码解析
-    shareCodeParsing() {
-        return got(this.option.userUrl, {
-            timeout: 10000
-        }).then((response: any) => {
-            delete response.body;
-            console.log(response);
-            let arr = response.url.split('?');
-            // 获取用户 sec_uid
-            let param = qs.parse(arr[1]);
-            // 条数
-            param.count = this.count
-            param.max_cursor = this.max_cursor
-            param.aid = this.aid
-            // 抖音用户数据列表
-            const path = this.baseUrl + qs.stringify(param)
-            console.log(path)
-            return this.userInfo(path)
-        }).catch((error: any) => {
-            console.log('用户分享码解析' + error)
-        })
-    }
 
-    // 用户视频列表
-    userInfo(path: string) {
-        return got(path).then((resList: any) => {
-            const res = JSON.parse(resList.body);
-            // 视频地址
-            const videoArr = [];
-            for (let item of res.aweme_list) {
-                videoArr.push({
-                    videoUrl: this.videoUrl.replace('playwm', 'play') + item.video.vid,
-                    desc: item.desc.replace(/\s+/g, ''),
-                    cover: item.video.cover.url_list[0],
-                    select: false,
-                    id: item.video.vid,
-                });
-            }
-            return videoArr;
-        }).catch((error: any) => {
-            console.log('用户视频列表' + error)
-        })
-    }
 
     // 下载文件
     downFile(url: string, name: string) {
