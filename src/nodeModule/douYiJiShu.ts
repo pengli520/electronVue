@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-10-27 14:40:54
- * @LastEditTime: 2020-11-30 10:56:57
+ * @LastEditTime: 2021-06-02 10:28:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-electron\src\node\douYiVideo.js
@@ -67,7 +67,7 @@ export default class downVideo  {
             timeout: 10000,
             headers: {
                 'User-Agent': 'AwemeLite 12.9.0 rv:129005 (iPhone; iOS 13.5.1; zh_CN) Cronet',
-                'x-common-params-v2': `os_api=18&device_platform=iphone&device_type=iPhone9,1&iid=1107947072792078&version_code=12.9.0&app_name=douyin_lite&openudid=57ee12cbcb7c09cf1f4563b87d6f016f1f3a9ec8&device_id=${Math.ceil(Math.random()*1000000000000000)}&os_version=13.5.1&aid=2329&channel=App%20Store&cdid=A91D75B8-D570-441F-A80A-E3C20C0D07F5&ac=WIFI`
+                'x-common-params-v2': `os_api=18&device_platform=iphone&device_type=iPhone9,1&iid=1107947072792078&version_code=12.9.0&app_name=douyin_lite&openudid=57ee12cbcb7c09cf1f4563b87d6f016f1f3a9ec8&device_id=${Math.ceil(Math.random()*10000)}&os_version=13.5.1&aid=2329&channel=App%20Store&cdid=A91D75B8-D570-441F-A80A-E3C20C0D07F5&ac=WIFI`
             }
         })
         .then((res: any) => {
